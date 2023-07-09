@@ -1,0 +1,25 @@
+---
+
+
+- hosts: servers
+  become: yes
+  tasks:
+
+
+  - name: Install zabbix-agent
+    apt: name=zabbix-agent state=present
+
+
+  - name: Configure Zabbix-agent
+    template: src=/etc/ansible/templates/zabbix_agentd.conf.j2 dest=/etc/zabbix/zabbix_agentd.conf
+    # notify: restart zabbix-agent
+
+
+  - name: Ensure Zabbix-agent is started and enabled
+    service: name=zabbix-agent state=started enabled=true
+
+
+  - name: Add firewall rule for Zabbix-agent
+    ufw: rule=allow port=10050 proto=tcp
+
+
